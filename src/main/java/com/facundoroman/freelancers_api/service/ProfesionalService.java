@@ -1,0 +1,71 @@
+package com.facundoroman.freelancers_api.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.facundoroman.freelancers_api.model.Profesional;
+import com.facundoroman.freelancers_api.repository.ProfesionalRepository;
+
+
+@Service
+public class ProfesionalService {
+	
+	@Autowired
+	private ProfesionalRepository profesionalRepo;
+	
+	//Buscar a todos los profesionales 
+	public List<Profesional> listarProfesional(){
+		return profesionalRepo.findAll();
+	}
+	
+	
+	//crear a un nuevo profesional
+	public Profesional crearProfesional(Profesional p) {
+		return profesionalRepo.save(p);
+	}
+	
+	//buscar profenioal por id
+	public Profesional buscarProfesionalId(Long id) {
+		
+		return profesionalRepo.findById(id).orElse(null);
+		
+	}
+	
+	//elimina profesional por id
+	public Profesional eliminarProfesionalId(Long id) {
+		
+		profesionalRepo.deleteById(id);
+		return null;
+		
+	}
+	
+	//actualiza profesional por id
+	 public Profesional actualizarProfesional(Long id, Profesional datosActualizados) {
+	   
+	        Optional<Profesional> profesionalExistenteOptional = profesionalRepo.findById(id);
+
+	       
+	        if (profesionalExistenteOptional.isPresent()) {
+	          
+	            Profesional profesionalExistente = profesionalExistenteOptional.get();
+
+	            profesionalExistente.setNombre(datosActualizados.getNombre());
+	            profesionalExistente.setEspecialidad(datosActualizados.getEspecialidad());
+	            profesionalExistente.setProvincia(datosActualizados.getProvincia());
+	            profesionalExistente.setCiudad(datosActualizados.getCiudad());
+	            profesionalExistente.setHabilidades(datosActualizados.getHabilidades()); 
+	            profesionalExistente.setDescripcion(datosActualizados.getDescripcion());
+	            profesionalExistente.setEmail(datosActualizados.getEmail());
+
+	     
+	            return profesionalRepo.save(profesionalExistente);
+	        } else {
+	       
+	            return null;
+	        }
+	
+	 }
+}
