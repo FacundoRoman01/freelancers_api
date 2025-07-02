@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.facundoroman.freelancers_api.model.Profesional;
@@ -50,6 +51,22 @@ public class ProfesionalController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
 	}
+	
+	
+	
+	 // Nuevo endpoint para filtrar profesionales
+    @GetMapping("/filtrar") // La URL será /api/profesionales/filtrar
+    public ResponseEntity<List<Profesional>> filtrarPorCiudadYHabilidad(
+            @RequestParam String ciudad,    // Recibe el parámetro 'ciudad' de la URL
+            @RequestParam String habilidad) { // Recibe el parámetro 'habilidad' de la URL
+
+        // Llama al servicio para ejecutar la lógica de búsqueda
+        List<Profesional> profesionales = profesionalService.filtrarPorCiudadYHabilidad(ciudad, habilidad);
+
+        // Devuelve la lista de profesionales con un estado HTTP 200 OK
+        return new ResponseEntity<>(profesionales, HttpStatus.OK);
+    }
+	
 
 	@PutMapping("/{id}") 
 	public ResponseEntity<Profesional> actualizarProfesional(

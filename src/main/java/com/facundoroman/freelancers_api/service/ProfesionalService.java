@@ -27,12 +27,24 @@ public class ProfesionalService {
 		return profesionalRepo.save(p);
 	}
 	
-	//buscar profenioal por id
+	//buscar profesional por id
 	public Profesional buscarProfesionalId(Long id) {
 		
 		return profesionalRepo.findById(id).orElse(null);
 		
 	}
+	
+	
+	
+	//filtrar por cuidad y habilidad
+	
+	public  List<Profesional> filtrarPorCiudadYHabilidad(String ciudad , String habilidad) {
+		
+		return profesionalRepo.findByCiudadAndHabilidadesContaining(ciudad, habilidad);
+		
+	}
+	
+	
 	
 	//elimina profesional por id
 	public Profesional eliminarProfesionalId(Long id) {
