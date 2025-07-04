@@ -11,6 +11,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Profesional {
@@ -18,18 +22,34 @@ public class Profesional {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank(message = "El nombre no puede estar vacio")
+	@Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres") 
 	private String nombre;
+	
+	@NotBlank(message = "La especialida no puede estar vacio")
 	private String especialidad;
+	
+	@NotBlank(message = "La provincia no puede estar vacio")
 	private String provincia;
+	
+	@NotBlank(message = "La ciudad no puede estar vacio")
 	private String ciudad;
 
 	@ElementCollection
 	@CollectionTable(name = "profesional_habilidades", joinColumns = @JoinColumn(name = "profesional_id"))
 	@Column(name = "habilidad") 
+	@NotEmpty(message = "La lista de habilidades no puede estar vacia")
 	private Set<String> habilidades;
 
 	@Column(columnDefinition = "TEXT")
+	@NotBlank(message = "La descripcion no puede estar vacia")
+	@Size(max = 500, message = "La descripción no puede exceder los 500 caracteres")
 	private String descripcion;
+	
+
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El email debe tener un formato valido")
 	private String email;
 
 	public Profesional() {

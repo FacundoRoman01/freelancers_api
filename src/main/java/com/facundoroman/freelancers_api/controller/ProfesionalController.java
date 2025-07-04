@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.facundoroman.freelancers_api.model.Profesional;
 import com.facundoroman.freelancers_api.service.ProfesionalService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/profesionales")
 public class ProfesionalController {
@@ -34,7 +36,7 @@ public class ProfesionalController {
 	
 
 	@PostMapping
-	public ResponseEntity<Profesional> crearProfesional(@RequestBody Profesional profesional) {
+	public ResponseEntity<Profesional> crearProfesional(@Valid @RequestBody Profesional profesional) {
 		Profesional nuevoProfesional = profesionalService.crearProfesional(profesional);
 
 		return new ResponseEntity<>(nuevoProfesional, HttpStatus.CREATED); 
@@ -55,21 +57,22 @@ public class ProfesionalController {
 	
 	
 	 // Nuevo endpoint para filtrar profesionales
-    @GetMapping("/filtrar") // La URL será /api/profesionales/filtrar
+    @GetMapping("/filtrar") 
     public ResponseEntity<List<Profesional>> filtrarPorCiudadYHabilidad(
-            @RequestParam String ciudad,    // Recibe el parámetro 'ciudad' de la URL
-            @RequestParam String habilidad) { // Recibe el parámetro 'habilidad' de la URL
+            @RequestParam String ciudad,    
+            @RequestParam String habilidad) { 
 
-        // Llama al servicio para ejecutar la lógica de búsqueda
+        
         List<Profesional> profesionales = profesionalService.filtrarPorCiudadYHabilidad(ciudad, habilidad);
 
-        // Devuelve la lista de profesionales con un estado HTTP 200 OK
+       
         return new ResponseEntity<>(profesionales, HttpStatus.OK);
     }
 	
 
 	@PutMapping("/{id}") 
 	public ResponseEntity<Profesional> actualizarProfesional(
+		@Valid	
 	    @PathVariable Long id, 
 	    @RequestBody Profesional datosActualizados) { 
 	    
