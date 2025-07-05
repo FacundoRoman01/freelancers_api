@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.facundoroman.freelancers_api.model.Profesional;
 import com.facundoroman.freelancers_api.repository.ProfesionalRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 @Service
@@ -17,8 +19,8 @@ public class ProfesionalService {
 	private ProfesionalRepository profesionalRepo;
 	
 	//Buscar a todos los profesionales 
-	public List<Profesional> listarProfesional(){
-		return profesionalRepo.findAll();
+	public Page<Profesional> listarProfesional(Pageable pageable){
+		return profesionalRepo.findAll(pageable);
 	}
 	
 	
@@ -36,13 +38,17 @@ public class ProfesionalService {
 	
 	
 	
-	//filtrar por cuidad y habilidad
+	//filtrar profesional por cuidad y habilidad
 	
 	public  List<Profesional> filtrarPorCiudadYHabilidad(String ciudad , String habilidad) {
 		
 		return profesionalRepo.findByCiudadAndHabilidadesContaining(ciudad, habilidad);
 		
 	}
+	
+	
+	
+	
 	
 	
 	

@@ -13,5 +13,6 @@ public interface ProfesionalRepository extends JpaRepository<Profesional, Long> 
 
 	List<Profesional> findByCiudadAndHabilidadesContaining (String Ciudad, String habilidad);
 	
+	
 }
  

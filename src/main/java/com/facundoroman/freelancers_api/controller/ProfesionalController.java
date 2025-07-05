@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault; 
+import org.springframework.data.domain.Sort; 
 
 import com.facundoroman.freelancers_api.model.Profesional;
 import com.facundoroman.freelancers_api.service.ProfesionalService;
@@ -29,8 +33,13 @@ public class ProfesionalController {
 	
 
 	@GetMapping
-	public ResponseEntity<List<Profesional>> listarProfesionales() {
-		List<Profesional> profesionales = profesionalService.listarProfesional();
+	public ResponseEntity<Page<Profesional>> listarProfesionales(
+			@PageableDefault(size = 10, sort = "nombre", direction = Sort.Direction.ASC)
+			Pageable pageable
+			
+			) {
+		
+		Page<Profesional> profesionales = profesionalService.listarProfesional(pageable);
 		return new ResponseEntity<>(profesionales, HttpStatus.OK);
 	}
 	
