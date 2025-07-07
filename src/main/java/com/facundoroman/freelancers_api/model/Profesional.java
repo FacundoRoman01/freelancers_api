@@ -50,6 +50,7 @@ public class Profesional {
 
     @NotBlank(message = "El email no puede estar vacío")
     @Email(message = "El email debe tener un formato valido")
+    @Column(unique = true)
 	private String email;
 
 	public Profesional() {
@@ -68,6 +69,12 @@ public class Profesional {
 	}
 
 	// getter
+	
+	
+	public Long getId() {
+		return id;
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

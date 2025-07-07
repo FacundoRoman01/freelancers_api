@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault; 
 import org.springframework.data.domain.Sort; 
+import io.swagger.v3.oas.annotations.Parameter;
+
 
 import com.facundoroman.freelancers_api.model.Profesional;
 import com.facundoroman.freelancers_api.service.ProfesionalService;
@@ -34,6 +36,7 @@ public class ProfesionalController {
 
 	@GetMapping
 	public ResponseEntity<Page<Profesional>> listarProfesionales(
+			 @Parameter(hidden = true) 
 			@PageableDefault(size = 10, sort = "nombre", direction = Sort.Direction.ASC)
 			Pageable pageable
 			
