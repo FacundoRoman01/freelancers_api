@@ -23,13 +23,14 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 	    scheme = "basic"
 	)
 public class SecurityConfig {
-
+	
+//Para incriptar la contraseña
 	   @Bean
 	    public PasswordEncoder passwordEncoder() {
 	        return new BCryptPasswordEncoder();
 	    }
 
-
+//añadiendo usuarios y roles en memoria
 	   @Bean
 	    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
 
@@ -46,6 +47,7 @@ public class SecurityConfig {
 	        return new InMemoryUserDetailsManager(admin, user);
 	    }
 
+	   //Protejiendo los endpoint --- privados y publicos
 	   @Bean
 	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	        http

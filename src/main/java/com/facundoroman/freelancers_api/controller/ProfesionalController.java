@@ -37,7 +37,7 @@ public class ProfesionalController {
 	@GetMapping
 	public ResponseEntity<Page<Profesional>> listarProfesionales(
 			 @Parameter(hidden = true) 
-			@PageableDefault(size = 10, sort = "nombre", direction = Sort.Direction.ASC)
+			@PageableDefault(size = 10, sort = "nombre")
 			Pageable pageable
 			
 			) {
