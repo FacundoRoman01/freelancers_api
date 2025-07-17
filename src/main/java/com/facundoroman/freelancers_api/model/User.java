@@ -27,6 +27,7 @@ public class User {
 	private Long id;
 
 	@NotBlank(message = "El nombre de usuario no puede estar vacio")
+	
 	@Column(unique = true, nullable = false)
 	private String username;
 
@@ -80,6 +81,13 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
+	
+
+	public Set<Role> getRoles() {
+		
+		return roles;
+	}
+
 
 	public void setUsername(String userName) {
 		this.username = userName;
@@ -91,6 +99,11 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 	@Override
