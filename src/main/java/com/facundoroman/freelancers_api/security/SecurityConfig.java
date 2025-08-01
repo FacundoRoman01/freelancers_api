@@ -2,6 +2,7 @@ package com.facundoroman.freelancers_api.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 @Configuration
@@ -36,6 +39,14 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+    
+    
+    
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+    
 
 	
 
@@ -58,6 +69,8 @@ public class SecurityConfig {
 
                 //  Regla para el endpoint de REGISTRO (PÚBLICA)
                 .requestMatchers("/api/auth/register").permitAll() 
+                .requestMatchers("/api/auth/login").permitAll()
+
 
                 // Reglas específicas para roles (PROTEGIDAS)
                 .requestMatchers("/api/profesionales/**").hasRole("ADMIN")
