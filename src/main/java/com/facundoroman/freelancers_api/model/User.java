@@ -27,7 +27,6 @@ public class User {
 	private Long id;
 
 	@NotBlank(message = "El nombre de usuario no puede estar vacio")
-	
 	@Column(unique = true, nullable = false)
 	private String username;
 
@@ -70,7 +69,7 @@ public class User {
 		return id;
 	}
 
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 

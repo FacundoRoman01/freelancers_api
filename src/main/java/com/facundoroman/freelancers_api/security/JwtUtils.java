@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -27,7 +28,7 @@ public class JwtUtils {
 	// Obtener la clave para firmar el token
 	private Key getSigningKey() {
 		
-		System.out.println("DEBUG: El valor de 'jwt.secret' es: '" + jwtsecret + "'");
+		//System.out.println("DEBUG: El valor de 'jwt.secret' es: '" + jwtsecret + "'");
 
 		byte[] keyBytes = Decoders.BASE64.decode(jwtsecret);
 		return Keys.hmacShaKeyFor(keyBytes);
@@ -42,4 +43,33 @@ public class JwtUtils {
 				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 				.compact();
 	}
+
+	// MÉTODOS PARA VALIDAR Y LEER EL TOKEN
+
+		public boolean isTokenValid(String token, UserDetails userDetails) {
+	        final String username = extractUsername(token);
+	        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	    }
+
+		public String extractUsername(String token) {
+	        return extractAllClaims(token).getSubject();
+	    }
+
+	    private boolean isTokenExpired(String token) {
+	        return extractExpiration(token).before(new Date());
+	    }
+
+	    private Date extractExpiration(String token) {
+	        return extractAllClaims(token).getExpiration();
+	    }
+
+	 
+	    private Claims extractAllClaims(String token) {
+	        return Jwts.parserBuilder()
+	                .setSigningKey(getSigningKey())
+	                .build()
+	                .parseClaimsJws(token)
+	                .getBody();
+	    }
+
 }

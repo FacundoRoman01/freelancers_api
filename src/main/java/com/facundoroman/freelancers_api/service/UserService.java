@@ -16,7 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.facundoroman.freelancers_api.dto.UserDTO;
 import com.facundoroman.freelancers_api.exception.ResourceAlreadyExistsException;
+import com.facundoroman.freelancers_api.exception.ResourceNotFoundException;
 import com.facundoroman.freelancers_api.model.Role;
 import com.facundoroman.freelancers_api.model.User;
 import com.facundoroman.freelancers_api.repository.RoleRepository;
@@ -49,9 +51,9 @@ public class UserService implements UserDetailsService {
 	     */
 	    public User registerNewUser(User user) {
 	    	
-	        if (userRepository.existsByUsername(user.getUserName())) {
+	        if (userRepository.existsByUsername(user.getUsername())) {
 	            // Lanza ResourceAlreadyExistsException en lugar de RuntimeException
-	            throw new ResourceAlreadyExistsException("El nombre de usuario '" + user.getUserName() + "' ya existe. Por favor, elige otro.");
+	            throw new ResourceAlreadyExistsException("El nombre de usuario '" + user.getUsername() + "' ya existe. Por favor, elige otro.");
 	        }
 	        
 	        if (user.getEmail() != null && userRepository.existsByEmail(user.getEmail())) {
@@ -89,11 +91,58 @@ public class UserService implements UserDetailsService {
 	                                  .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
 	        return new org.springframework.security.core.userdetails.User(
-	            user.getUserName(),
+	            user.getUsername(),
 	            user.getPassword(),
 	            mapRolesToAuthorities(user.getRoles())
 	        );
 	    }
+	    
+	    
+	    
+	    
+	    /**
+		 * NUEVO MÉTODO: Encuentra la entidad User completa por su nombre de usuario.
+		 * Útil para obtener la información completa del usuario, como el email.
+		 *
+		 * @param username El nombre de usuario.
+		 * @return La entidad User.
+		 * @throws ResourceNotFoundException Si el usuario no es encontrado.
+		 */
+		public User findByUsername(String username) {
+			return userRepository.findByUsername(username)
+									.orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + username));
+		}
+		
+		
+		
+		
+		
+		
+		/**
+		 * NUEVO MÉTODO: Encuentra un usuario y lo mapea a un DTO para una respuesta segura.
+		 *
+		 * @param username El nombre de usuario.
+		 * @return Un objeto UserDTO con datos básicos del usuario.
+		 * @throws ResourceNotFoundException Si el usuario no es encontrado.
+		 */
+		public UserDTO findUserDTOByUsername(String username) {
+			User user = findByUsername(username);
+			
+			UserDTO userDTO = new UserDTO();
+			userDTO.setId(user.getId());
+			userDTO.setUsername(user.getUsername());
+			userDTO.setEmail(user.getEmail());
+			userDTO.setRoles(user.getRoles().stream()
+									.map(role -> role.getName())
+									.collect(Collectors.toSet()));
+			
+			return userDTO;
+		}
+	    
+	    
+	    
+	    
+	    
 	    
 
 	    /**

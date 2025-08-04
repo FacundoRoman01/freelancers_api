@@ -1,10 +1,14 @@
 package com.facundoroman.freelancers_api.controller;
 
+import java.security.Principal;
 import java.util.List;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 import com.facundoroman.freelancers_api.model.Profesional;
 import com.facundoroman.freelancers_api.service.ProfesionalService;
+import com.facundoroman.freelancers_api.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +37,9 @@ public class ProfesionalController {
 	
 	@Autowired 
 	ProfesionalService profesionalService;
+	
+    @Autowired
+    private UserService userService;
 	
 
 	@GetMapping
@@ -95,6 +103,8 @@ public class ProfesionalController {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 	    }
 	}
+	
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> eliminarProfesional(@PathVariable Long id) { 
@@ -103,6 +113,17 @@ public class ProfesionalController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
 	}
 	
+	
+	
+	@GetMapping("/me")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Profesional> getAuthenticatedProfesional(Principal principal) {
+	    String username = principal.getName();
+	    com.facundoroman.freelancers_api.model.User user = userService.findByUsername(username);
+	    Profesional profesional = profesionalService.findByEmail(user.getEmail());
+	    return ResponseEntity.ok(profesional);
+	}
+
 	
 
 }

@@ -56,6 +56,17 @@ public class ProfesionalService {
 		
 	}
 	
+	
+	
+	
+	// NUEVO MÉTODO:
+    // Permite encontrar un profesional por su email
+    public Profesional findByEmail(String email) {
+        return profesionalRepo.findByEmail(email)
+                              .orElseThrow(() -> new ResourceNotFoundException("Profesional no encontrado con email: " + email));
+    }
+	
+	
 
 	
 	//elimina profesional por id
