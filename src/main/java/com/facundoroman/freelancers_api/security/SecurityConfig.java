@@ -78,7 +78,20 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/api/auth/**"
                 ).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/profesionales/**").permitAll()
+                // Endpoint público para obtener la lista de todos los profesionales
+                .requestMatchers(HttpMethod.GET, "/api/profesionales").permitAll()
+                // Endpoint público para ver un profesional por su ID
+                .requestMatchers(HttpMethod.GET, "/api/profesionales/{id}").permitAll()
+                // Endpoint público para filtrar profesionales
+                .requestMatchers(HttpMethod.GET, "/api/profesionales/filtrar").permitAll()
+                
+                // Endpoints privados que requieren autenticación
+                .requestMatchers(HttpMethod.PUT, "/api/profesionales/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/profesionales/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/profesionales/**").authenticated()
+                // El endpoint /me debe ser protegido
+                .requestMatchers(HttpMethod.GET, "/api/profesionales/me").authenticated()
+                // Cualquier otra petición no especificada requiere autenticación
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class);

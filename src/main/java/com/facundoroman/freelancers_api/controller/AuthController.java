@@ -36,28 +36,43 @@ public class AuthController {
 	    }
 	    
 	    
-	    @PostMapping("/register")
-	    public ResponseEntity<String> RegisterUser(@RequestBody User user){
-	    	userService.registerNewUser(user);
-	    	return new ResponseEntity<>("Usuario registrado exitosamente!", HttpStatus.CREATED);
-	    }
-	    
-	    @PostMapping("/login")
-	    public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest) {
-	        org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
-	            new UsernamePasswordAuthenticationToken(
-	                loginRequest.getUsername(),
-	                loginRequest.getPassword()
-	            )
-	        );
+	    //Endpoint para el registro de nuevos usuarios
+		@PostMapping("/register")
+		public ResponseEntity<Map<String, String>> RegisterUser(@RequestBody User user) {
+			// Lógica para registrar al nuevo usuario
+			userService.registerNewUser(user);
+			
+			// Creamos un mapa para devolver una respuesta en formato JSON
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Usuario registrado exitosamente!");
+			
+			// Devolvemos la respuesta con el mensaje y el estado HTTP 201 (Created)
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		}
+		
+		
+		 //Endpoint para la autenticación de usuarios
+		@PostMapping("/login")
+		public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest) {
+			// Autentica al usuario usando el AuthenticationManager
+			org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+					loginRequest.getUsername(),
+					loginRequest.getPassword()
+				)
+			);
+			
+			
+			// Genera el token JWT para el usuario autenticado
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			String token = jwtUtils.genereToken(userDetails);
 
-	        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-	        String token = jwtUtils.genereToken(userDetails);
+			// Prepara la respuesta con el token JWT en un objeto JSON
+			Map<String, String> response = new HashMap<>();
+			response.put("token", token);
 
-	        Map<String, String> response = new HashMap<>();
-	        response.put("token", token);
-
-	        return ResponseEntity.ok(response);
+			// Devuelve la respuesta con el token y el estado HTTP 200 (OK)
+			return ResponseEntity.ok(response);
 	    }
 
 
